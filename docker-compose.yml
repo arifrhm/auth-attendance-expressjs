@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  # Node.js application
+  node-app:
+    image: node:14
+    working_dir: /app
+    volumes:
+      - ./src:/app/src
+      - ./package.json:/app/package.json
+      - ./package-lock.json:/app/package-lock.json
+    environment:
+      NODE_ENV: production
+    command: "npm start"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+
+  # MongoDB
+  mongo:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: yourMongoUsername
+      MONGO_INITDB_ROOT_PASSWORD: yourMongoPassword
+      MONGO_INITDB_DATABASE: yourMongoDatabase
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data:/data/db
+
+networks:
+  default:
+    external:
+      name: your-network-name
